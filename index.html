@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Punch — Time Log</title>
+<meta name="theme-color" content="#1E2A38">
+<meta name="description" content="Offline-capable fixed-schedule work time log">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Radha-Time-Entry">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -29,4 +37,13 @@ function summaries(){var wb={},mb={};Object.keys(state.entries).forEach(function
 function log(){var el=document.getElementById("logList"),ks=Object.keys(state.entries).sort().reverse();document.getElementById("logCount").textContent=ks.length?ks.length+" days logged":"";if(!ks.length){el.innerHTML='<div class="empty">Nothing logged yet.</div>';return}el.innerHTML="";ks.forEach(function(k){var w=dayM(k),t=target(k),d=w-t,st=status(w,t),r=document.createElement("div");r.className="log-entry";r.innerHTML='<div><div class="date">'+dateLabel(k)+'</div><div class="sessions">'+state.entries[k].map(function(s){return s.in+"–"+s.out}).join(" · ")+'</div></div><div class="meta"><div class="total">'+fmt(w)+'<br><span class="variance" style="color:'+color(st.c)+'">'+(d>0?"+":"")+fmt(d)+'</span></div><div class="buttons"><button class="btn ghost small edit">Edit</button><button class="btn danger small del">Delete</button></div></div>';r.querySelector(".edit").onclick=function(){state.editing=k;document.getElementById("entryDate").value=k;form(state.entries[k]);document.getElementById("editingLabel").textContent="editing "+k;document.getElementById("cancelEditBtn").hidden=false;scrollTo({top:0,behavior:"smooth"})};r.querySelector(".del").onclick=function(){if(confirm("Delete the log for "+dateLabel(k)+"?")){delete state.entries[k];save();render()}};el.appendChild(r)})}function render(){summaries();log()}function reset(){state.editing=null;var k=today();document.getElementById("entryDate").value=k;form(fixed(k));document.getElementById("editingLabel").textContent="";document.getElementById("cancelEditBtn").hidden=true}
 function init(){load();reset();render();document.getElementById("entryDate").onchange=function(){var k=this.value;if(k)form(state.entries[k]||fixed(k))};document.getElementById("addSessionBtn").onclick=function(){row("","")};document.getElementById("cancelEditBtn").onclick=reset;document.getElementById("saveEntryBtn").onclick=function(){var k=document.getElementById("entryDate").value,a=collect();if(!k)return alert("Pick a date first.");if(!a.length)return alert("Add at least one complete check-in / check-out pair.");state.entries[k]=a;save();reset();render()};document.getElementById("exportBtn").onclick=function(){var b=new Blob([JSON.stringify({entries:state.entries,fixedSchedule:SCHEDULE,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="punch-backup-"+today()+".json";a.click();URL.revokeObjectURL(u)};document.getElementById("importFile").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(x){try{var d=JSON.parse(x.target.result);if(d.entries)state.entries=d.entries;save();render();alert("Backup imported.")}catch(z){alert("Could not read that backup file.")}e.target.value=""};r.readAsText(f)}}document.addEventListener("DOMContentLoaded",init);
 })();
-</script></body></html>
+</script><script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./service-worker.js").catch(function (error) {
+      console.error("Service worker registration failed:", error);
+    });
+  });
+}
+</script>
+</body></html>
