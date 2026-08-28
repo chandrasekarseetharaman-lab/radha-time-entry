@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Punch — Time Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #EAE0C8;
+    --paper-card: #F6F1E1;
+    --paper-card-alt: #F0E9D4;
+    --ink: #1E2A38;
+    --ink-soft: #5B6663;
+    --line: #C9BC98;
+    --stamp-red: #B23A2E;
+    --stamp-green: #3D6B52;
+    --stamp-amber: #B8862E;
+    --focus: #1E2A38;
+  }
+
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  html, body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  body{
+    background-image:
+      repeating-linear-gradient(0deg, rgba(30,42,56,0.035) 0px, rgba(30,42,56,0.035) 1px, transparent 1px, transparent 32px);
+  }
+
+  .wrap{
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 28px 20px 80px;
+  }
+
+  header.top{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  header.top .brand{
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  header.top .brand .dot{
+    width:14px;height:14px;border-radius:50%;
+    background: var(--stamp-red);
+    display:inline-block;
+    box-shadow: 0 0 0 3px rgba(178,58,46,0.18);
+  }
+  header.top .tagline{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  button, input, select{ font-family: inherit; }
+
+  .btn{
+    font-family:'Archivo', sans-serif;
+    font-weight:700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 12.5px;
+    background: var(--ink);
+    color: var(--paper-card);
+    border: none;
+    padding: 11px 18px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: transform .08s ease, opacity .15s ease;
+  }
+  .btn:hover{ opacity:.88; }
+  .btn:active{ transform: translateY(1px); }
+  .btn.ghost{
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+  }
+  .btn.small{ padding: 7px 12px; font-size: 11px; }
+  .btn.danger{ background: var(--stamp-red); }
+  .btn:focus-visible, input:focus-visible, select:focus-visible{
+    outline: 2.5px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .card{
+    background: var(--paper-card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 0 rgba(30,42,56,0.04);
+  }
+  .card h2{
+    font-family:'Archivo', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 16px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+  }
+  .card h2 .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:400;
+    color: var(--ink-soft);
+    font-size: 11px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  label{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+  }
+  input[type="date"], input[type="time"], input[type="number"]{
+    width:100%;
+    padding: 9px 10px;
+    border: 1.5px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 14px;
+  }
+
+  .form-row{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom: 14px; }
+  .form-row > div{ flex: 1 1 160px; }
+
+  .session-row{
+    display:flex;
+    align-items:flex-end;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .session-row:last-of-type{ border-bottom:none; }
+  .session-row .field{ flex: 1; }
+  .session-row .remove{
+    background:none;
+    border:none;
+    color: var(--stamp-red);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    cursor:pointer;
+    padding: 8px 4px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .actions-row{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    margin-top: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* Stamp badge — the signature element */
+  .stamp{
+    display:inline-block;
+    font-family:'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 2px solid currentColor;
+    border-radius: 3px;
+    transform: rotate(-3deg);
+    white-space: nowrap;
+  }
+  .stamp.over{ color: var(--stamp-red); }
+  .stamp.good{ color: var(--stamp-green); }
+  .stamp.under{ color: var(--stamp-amber); }
+
+  .log-entry{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--line);
+    flex-wrap: wrap;
+  }
+  .log-entry:last-child{ border-bottom: none; }
+  .log-entry .date{
+    font-family:'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .log-entry .sessions{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+  .log-entry .meta{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap: wrap;
+  }
+  .log-entry .total{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size: 14px;
+    min-width: 70px;
+    text-align:right;
+  }
+  .log-entry .buttons{ display:flex; gap:6px; }
+
+  .summary-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .summary-card{
+    background: var(--paper-card-alt);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 14px 16px;
+  }
+  .summary-card .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .summary-card .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 24px;
+    line-height:1;
+    margin-bottom: 6px;
+  }
+  .summary-card .bar{
+    height: 6px;
+    background: var(--line);
+    border-radius: 3px;
+    overflow:hidden;
+    margin-bottom: 8px;
+  }
+  .summary-card .bar-fill{ height:100%; border-radius:3px; }
+
+  .empty{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-soft);
+    padding: 20px 0;
+    text-align:center;
+  }
+
+  .settings-grid{
+    display:grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 18px;
+    align-items: start;
+  }
+  .weekday-toggles{ display:flex; gap:6px; flex-wrap:wrap; }
+  .weekday-toggles button{
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    color: var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    cursor:pointer;
+  }
+  .weekday-toggles button.active{
+    background: var(--ink);
+    color: var(--paper-card);
+    border-color: var(--ink);
+  }
+
+  details summary{
+    cursor:pointer;
+    font-family:'Archivo', sans-serif;
+    font-weight:700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    padding: 4px 0;
+  }
+
+  footer{
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 40px;
+    letter-spacing: 0.03em;
+  }
+
+  @media (max-width: 640px){
+    .settings-grid{ grid-template-columns: 1fr; }
+    .log-entry{ flex-direction: column; }
+    .log-entry .total{ text-align:left; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <div class="brand"><span class="dot"></span>Punch</div>
+      <div class="tagline">a plain-text time log</div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn ghost small" id="exportBtn">Export backup</button>
+      <label class="btn ghost small" style="margin:0; text-transform:uppercase; cursor:pointer;">
+        Import
+        <input type="file" id="importFile" accept="application/json" style="display:none;">
+      </label>
+    </div>
+  </header>
+
+  <!-- Settings -->
+  <div class="card">
+    <details id="settingsDetails">
+      <summary>Settings — agreed work hours</summary>
+      <div class="settings-grid" style="margin-top:16px;">
+        <div>
+          <label for="dailyHours">Standard hours / day</label>
+          <input type="number" id="dailyHours" min="0" max="24" step="0.25" value="8">
+        </div>
+        <div>
+          <label>Standard work days</label>
+          <div class="weekday-toggles" id="weekdayToggles"></div>
+        </div>
+      </div>
+      <div class="actions-row">
+        <span class="eyebrow" id="targetSummary" style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);"></span>
+        <button class="btn" id="saveSettingsBtn">Save settings</button>
+      </div>
+    </details>
+  </div>
+
+  <!-- New / edit entry -->
+  <div class="card">
+    <h2>Log a day <span class="eyebrow" id="editingLabel"></span></h2>
+    <div class="form-row">
+      <div>
+        <label for="entryDate">Date</label>
+        <input type="date" id="entryDate">
+      </div>
+    </div>
+    <div id="sessionsContainer"></div>
+    <div class="actions-row">
+      <button class="btn ghost small" id="addSessionBtn">+ Add another session</button>
+      <div style="display:flex; gap:8px;">
+        <button class="btn ghost" id="cancelEditBtn" style="display:none;">Cancel edit</button>
+        <button class="btn" id="saveEntryBtn">Save day</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly summary -->
+  <div class="card">
+    <h2>This week &amp; last <span class="eyebrow">Mon–Sun, vs. agreed hours</span></h2>
+    <div class="summary-grid" id="weeklySummary"></div>
+  </div>
+
+  <!-- Monthly summary -->
+  <div class="card">
+    <h2>This month &amp; last <span class="eyebrow">vs. agreed hours</span></h2>
+    <div class="summary-grid" id="monthlySummary"></div>
+  </div>
+
+  <!-- Log -->
+  <div class="card">
+    <h2>Full log <span class="eyebrow" id="logCount"></span></h2>
+    <div id="logList"></div>
+  </div>
+
+  <footer>Stored only in this browser · use Export to back up or move devices</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STORE_ENTRIES = "punch_entries_v1";
+  var STORE_SETTINGS = "punch_settings_v1";
+  var WEEKDAY_LABELS = ["S","M","T","W","T","F","S"];
+
+  var state = {
+    entries: {},       // { "YYYY-MM-DD": [{in:"09:00", out:"12:00"}, ...] }
+    settings: { dailyHours: 8, workDays: [1,2,3,4,5] },
+    editingDate: null
+  };
+
+  // ---------- persistence ----------
+  function loadState(){
+    try{
+      var e = localStorage.getItem(STORE_ENTRIES);
+      state.entries = e ? JSON.parse(e) : {};
+    }catch(err){ state.entries = {}; }
+    try{
+      var s = localStorage.getItem(STORE_SETTINGS);
+      if(s) state.settings = Object.assign(state.settings, JSON.parse(s));
+    }catch(err){ /* keep defaults */ }
+  }
+  function saveEntries(){ localStorage.setItem(STORE_ENTRIES, JSON.stringify(state.entries)); }
+  function saveSettings(){ localStorage.setItem(STORE_SETTINGS, JSON.stringify(state.settings)); }
+
+  // ---------- time helpers ----------
+  function toMinutes(hhmm){
+    if(!hhmm) return null;
+    var p = hhmm.split(":");
+    return parseInt(p[0],10)*60 + parseInt(p[1],10);
+  }
+  function sessionMinutes(sess){
+    var a = toMinutes(sess.in), b = toMinutes(sess.out);
+    if(a===null || b===null) return 0;
+    var diff = b - a;
+    if(diff < 0) diff += 24*60; // crosses midnight
+    return diff;
+  }
+  function dayMinutes(dateKey){
+    var sessions = state.entries[dateKey] || [];
+    var total = 0;
+    sessions.forEach(function(s){ total += sessionMinutes(s); });
+    return total;
+  }
+  function fmtHM(mins){
+    mins = Math.round(mins);
+    var neg = mins < 0;
+    mins = Math.abs(mins);
+    var h = Math.floor(mins/60), m = mins%60;
+    return (neg?"-":"") + h + "h " + (m<10?"0":"") + m + "m";
+  }
+  function fmtDate(dateKey){
+    var d = new Date(dateKey + "T00:00:00");
+    return d.toLocaleDateString(undefined, { weekday:"short", year:"numeric", month:"short", day:"numeric" });
+  }
+  function todayKey(){
+    return new Date().toISOString().slice(0,10);
+  }
+  function pad(n){ return n<10 ? "0"+n : ""+n; }
+  function dateKeyOf(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+
+  function mondayOf(d){
+    var day = d.getDay(); // 0=Sun..6=Sat
+    var diff = (day===0 ? -6 : 1-day);
+    var m = new Date(d);
+    m.setDate(d.getDate()+diff);
+    m.setHours(0,0,0,0);
+    return m;
+  }
+  function weekKeyOf(d){
+    var mon = mondayOf(d);
+    return dateKeyOf(mon);
+  }
+  function weekRangeLabel(mondayKey){
+    var mon = new Date(mondayKey + "T00:00:00");
+    var sun = new Date(mon); sun.setDate(mon.getDate()+6);
+    var opts = { month:"short", day:"numeric" };
+    return mon.toLocaleDateString(undefined,opts) + " – " + sun.toLocaleDateString(undefined,opts);
+  }
+  function monthKeyOf(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1); }
+  function monthLabel(monthKey){
+    var p = monthKey.split("-");
+    var d = new Date(parseInt(p[0],10), parseInt(p[1],10)-1, 1);
+    return d.toLocaleDateString(undefined, { month:"long", year:"numeric" });
+  }
+  function daysInMonth(year, monthIdx){ return new Date(year, monthIdx+1, 0).getDate(); }
+
+  // ---------- targets ----------
+  function weeklyTargetMinutes(){
+    return state.settings.dailyHours * 60 * state.settings.workDays.length;
+  }
+  function monthlyTargetMinutes(monthKey){
+    var p = monthKey.split("-");
+    var year = parseInt(p[0],10), monthIdx = parseInt(p[1],10)-1;
+    var nDays = daysInMonth(year, monthIdx);
+    var count = 0;
+    for(var day=1; day<=nDays; day++){
+      var d = new Date(year, monthIdx, day);
+      if(state.settings.workDays.indexOf(d.getDay()) !== -1) count++;
+    }
+    return count * state.settings.dailyHours * 60;
+  }
+
+  // ---------- aggregation ----------
+  function aggregateByWeek(){
+    var buckets = {}; // weekKey -> minutes
+    Object.keys(state.entries).forEach(function(dateKey){
+      var d = new Date(dateKey + "T00:00:00");
+      var wk = weekKeyOf(d);
+      buckets[wk] = (buckets[wk]||0) + dayMinutes(dateKey);
+    });
+    return buckets;
+  }
+  function aggregateByMonth(){
+    var buckets = {};
+    Object.keys(state.entries).forEach(function(dateKey){
+      var d = new Date(dateKey + "T00:00:00");
+      var mk = monthKeyOf(d);
+      buckets[mk] = (buckets[mk]||0) + dayMinutes(dateKey);
+    });
+    return buckets;
+  }
+
+  function stampFor(worked, target){
+    var delta = worked - target;
+    if(Math.abs(delta) < 1) return { cls:"good", text:"On target" };
+    if(delta > 0) return { cls:"over", text:"+" + fmtHM(delta) + " overtime" };
+    return { cls:"under", text:fmtHM(delta) + " under" };
+  }
+  function barColor(cls){
+    return cls==="over" ? "var(--stamp-red)" : cls==="under" ? "var(--stamp-amber)" : "var(--stamp-green)";
+  }
+
+  // ---------- rendering ----------
+  function renderWeekdayToggles(){
+    var el = document.getElementById("weekdayToggles");
+    el.innerHTML = "";
+    WEEKDAY_LABELS.forEach(function(label, idx){
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = label;
+      btn.setAttribute("aria-label", "Toggle day " + idx);
+      if(state.settings.workDays.indexOf(idx) !== -1) btn.classList.add("active");
+      btn.addEventListener("click", function(){
+        var pos = state.settings.workDays.indexOf(idx);
+        if(pos === -1) state.settings.workDays.push(idx);
+        else state.settings.workDays.splice(pos,1);
+        renderWeekdayToggles();
+        updateTargetSummary();
+      });
+      el.appendChild(btn);
+    });
+  }
+  function updateTargetSummary(){
+    var daily = parseFloat(document.getElementById("dailyHours").value) || 0;
+    var days = state.settings.workDays.length;
+    document.getElementById("targetSummary").textContent =
+      daily + "h × " + days + " days = " + (daily*days) + "h / week target";
+  }
+
+  function renderSessionsForm(sessions){
+    var container = document.getElementById("sessionsContainer");
+    container.innerHTML = "";
+    if(sessions.length === 0) sessions = [{in:"", out:""}];
+    sessions.forEach(function(sess, idx){
+      addSessionRow(sess.in, sess.out);
+    });
+  }
+  function addSessionRow(inVal, outVal){
+    var container = document.getElementById("sessionsContainer");
+    var row = document.createElement("div");
+    row.className = "session-row";
+    row.innerHTML =
+      '<div class="field"><label>Check-in</label><input type="time" class="sess-in" value="'+(inVal||"")+'"></div>' +
+      '<div class="field"><label>Check-out</label><input type="time" class="sess-out" value="'+(outVal||"")+'"></div>' +
+      '<button type="button" class="remove">Remove</button>';
+    row.querySelector(".remove").addEventListener("click", function(){
+      if(container.children.length > 1) row.remove();
+    });
+    container.appendChild(row);
+  }
+  function collectSessionsFromForm(){
+    var rows = document.querySelectorAll("#sessionsContainer .session-row");
+    var sessions = [];
+    rows.forEach(function(row){
+      var inVal = row.querySelector(".sess-in").value;
+      var outVal = row.querySelector(".sess-out").value;
+      if(inVal && outVal) sessions.push({ in: inVal, out: outVal });
+    });
+    return sessions;
+  }
+
+  function renderWeeklySummary(){
+    var el = document.getElementById("weeklySummary");
+    var buckets = aggregateByWeek();
+    var keys = Object.keys(buckets).sort().reverse().slice(0,4);
+    var target = weeklyTargetMinutes();
+    if(keys.length === 0){
+      el.innerHTML = '<div class="empty">No entries logged yet.</div>';
+      return;
+    }
+    el.innerHTML = "";
+    keys.forEach(function(wk){
+      var worked = buckets[wk];
+      var stamp = stampFor(worked, target);
+      var pct = target > 0 ? Math.min(100, (worked/target)*100) : 0;
+      var card = document.createElement("div");
+      card.className = "summary-card";
+      card.innerHTML =
+        '<div class="label">' + weekRangeLabel(wk) + '</div>' +
+        '<div class="num">' + fmtHM(worked) + '</div>' +
+        '<div class="bar"><div class="bar-fill" style="width:'+pct+'%; background:'+barColor(stamp.cls)+';"></div></div>' +
+        '<span class="stamp ' + stamp.cls + '">' + stamp.text + '</span>' +
+        '<div style="font-family:\'IBM Plex Mono\',monospace; font-size:11px; color:var(--ink-soft); margin-top:6px;">of ' + fmtHM(target) + ' agreed</div>';
+      el.appendChild(card);
+    });
+  }
+
+  function renderMonthlySummary(){
+    var el = document.getElementById("monthlySummary");
+    var buckets = aggregateByMonth();
+    var keys = Object.keys(buckets).sort().reverse().slice(0,3);
+    if(keys.length === 0){
+      el.innerHTML = '<div class="empty">No entries logged yet.</div>';
+      return;
+    }
+    el.innerHTML = "";
+    keys.forEach(function(mk){
+      var worked = buckets[mk];
+      var target = monthlyTargetMinutes(mk);
+      var stamp = stampFor(worked, target);
+      var pct = target > 0 ? Math.min(100, (worked/target)*100) : 0;
+      var card = document.createElement("div");
+      card.className = "summary-card";
+      card.innerHTML =
+        '<div class="label">' + monthLabel(mk) + '</div>' +
+        '<div class="num">' + fmtHM(worked) + '</div>' +
+        '<div class="bar"><div class="bar-fill" style="width:'+pct+'%; background:'+barColor(stamp.cls)+';"></div></div>' +
+        '<span class="stamp ' + stamp.cls + '">' + stamp.text + '</span>' +
+        '<div style="font-family:\'IBM Plex Mono\',monospace; font-size:11px; color:var(--ink-soft); margin-top:6px;">of ' + fmtHM(target) + ' agreed</div>';
+      el.appendChild(card);
+    });
+  }
+
+  function renderLog(){
+    var el = document.getElementById("logList");
+    var dateKeys = Object.keys(state.entries).sort().reverse();
+    document.getElementById("logCount").textContent = dateKeys.length ? (dateKeys.length + " day" + (dateKeys.length===1?"":"s") + " logged") : "";
+    if(dateKeys.length === 0){
+      el.innerHTML = '<div class="empty">Nothing logged yet — add your first day above.</div>';
+      return;
+    }
+    el.innerHTML = "";
+    dateKeys.forEach(function(dateKey){
+      var sessions = state.entries[dateKey];
+      var mins = dayMinutes(dateKey);
+      var dayTarget = state.settings.dailyHours * 60;
+      var sessText = sessions.map(function(s){ return s.in + "–" + s.out; }).join("  ·  ");
+      var row = document.createElement("div");
+      row.className = "log-entry";
+      row.innerHTML =
+        '<div>' +
+          '<div class="date">' + fmtDate(dateKey) + '</div>' +
+          '<div class="sessions">' + sessText + '</div>' +
+        '</div>' +
+        '<div class="meta">' +
+          '<div class="total">' + fmtHM(mins) + '</div>' +
+          '<div class="buttons">' +
+            '<button class="btn ghost small edit-btn">Edit</button>' +
+            '<button class="btn danger small del-btn">Delete</button>' +
+          '</div>' +
+        '</div>';
+      row.querySelector(".edit-btn").addEventListener("click", function(){ startEdit(dateKey); });
+      row.querySelector(".del-btn").addEventListener("click", function(){
+        if(confirm("Delete the log for " + fmtDate(dateKey) + "?")){
+          delete state.entries[dateKey];
+          saveEntries();
+          renderAll();
+        }
+      });
+      el.appendChild(row);
+    });
+  }
+
+  function startEdit(dateKey){
+    state.editingDate = dateKey;
+    document.getElementById("entryDate").value = dateKey;
+    renderSessionsForm(state.entries[dateKey] || []);
+    document.getElementById("editingLabel").textContent = "editing " + dateKey;
+    document.getElementById("cancelEditBtn").style.display = "inline-block";
+    window.scrollTo({ top:0, behavior:"smooth" });
+  }
+  function cancelEdit(){
+    state.editingDate = null;
+    document.getElementById("entryDate").value = todayKey();
+    renderSessionsForm([]);
+    document.getElementById("editingLabel").textContent = "";
+    document.getElementById("cancelEditBtn").style.display = "none";
+  }
+
+  function renderAll(){
+    renderWeeklySummary();
+    renderMonthlySummary();
+    renderLog();
+  }
+
+  // ---------- events ----------
+  function init(){
+    loadState();
+    renderWeekdayToggles();
+    document.getElementById("dailyHours").value = state.settings.dailyHours;
+    updateTargetSummary();
+    document.getElementById("entryDate").value = todayKey();
+    renderSessionsForm([]);
+    renderAll();
+
+    document.getElementById("dailyHours").addEventListener("input", updateTargetSummary);
+
+    document.getElementById("saveSettingsBtn").addEventListener("click", function(){
+      var daily = parseFloat(document.getElementById("dailyHours").value);
+      if(isNaN(daily) || daily < 0){ alert("Enter a valid number of standard hours per day."); return; }
+      state.settings.dailyHours = daily;
+      saveSettings();
+      renderAll();
+      document.getElementById("settingsDetails").open = false;
+    });
+
+    document.getElementById("addSessionBtn").addEventListener("click", function(){
+      addSessionRow("", "");
+    });
+
+    document.getElementById("saveEntryBtn").addEventListener("click", function(){
+      var dateKey = document.getElementById("entryDate").value;
+      if(!dateKey){ alert("Pick a date first."); return; }
+      var sessions = collectSessionsFromForm();
+      if(sessions.length === 0){ alert("Add at least one complete check-in / check-out pair."); return; }
+      state.entries[dateKey] = sessions;
+      saveEntries();
+      cancelEdit();
+      renderAll();
+    });
+
+    document.getElementById("cancelEditBtn").addEventListener("click", cancelEdit);
+
+    document.getElementById("exportBtn").addEventListener("click", function(){
+      var payload = { entries: state.entries, settings: state.settings, exportedAt: new Date().toISOString() };
+      var blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "punch-backup-" + todayKey() + ".json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("importFile").addEventListener("change", function(e){
+      var file = e.target.files[0];
+      if(!file) return;
+      var reader = new FileReader();
+      reader.onload = function(evt){
+        try{
+          var data = JSON.parse(evt.target.result);
+          if(data.entries) state.entries = data.entries;
+          if(data.settings) state.settings = Object.assign(state.settings, data.settings);
+          saveEntries();
+          saveSettings();
+          document.getElementById("dailyHours").value = state.settings.dailyHours;
+          renderWeekdayToggles();
+          updateTargetSummary();
+          renderAll();
+          alert("Backup imported.");
+        }catch(err){
+          alert("Could not read that file — is it a Punch backup JSON?");
+        }
+        e.target.value = "";
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>
