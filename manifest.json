@@ -1,13 +1,19 @@
 {
-  "id": "./",
-  "name": "Radha-Time-Entry",
-  "short_name": "Radha-Time-Entry",
-  "description": "Offline-capable work time log with a fixed 31-hour weekly schedule.",
+  "name": "Radha Time Entry",
+  "short_name": "Time Entry",
+  "description": "Fixed-schedule time log with weekly and monthly totals against agreed hours.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#EAE0C8",
   "theme_color": "#1E2A38",
-  "orientation": "any",
-  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
 }
