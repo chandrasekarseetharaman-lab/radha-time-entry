@@ -16,17 +16,115 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--paper:#EAE0C8;--card:#F6F1E1;--alt:#F0E9D4;--ink:#1E2A38;--soft:#5B6663;--line:#C9BC98;--red:#B23A2E;--green:#3D6B52;--amber:#B8862E}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,sans-serif;background-image:repeating-linear-gradient(0deg,rgba(30,42,56,.035) 0,rgba(30,42,56,.035) 1px,transparent 1px,transparent 32px)}.wrap{max-width:920px;margin:auto;padding:28px 20px 80px}.top{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid var(--ink);padding-bottom:14px;margin-bottom:22px;flex-wrap:wrap;gap:10px}.brand{font:800 30px Archivo,sans-serif;text-transform:uppercase;display:flex;align-items:center;gap:10px}.dot{width:14px;height:14px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px rgba(178,58,46,.18)}.tagline,label,.eyebrow,.sessions,footer{font-family:'IBM Plex Mono',monospace}.tagline,.eyebrow{font-size:11px;color:var(--soft)}.tagline{text-transform:uppercase;letter-spacing:.06em}.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:20px;margin-bottom:22px}.card h2{font:700 15px Archivo,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:0 0 16px;display:flex;justify-content:space-between;gap:8px}.btn{font:700 12.5px Archivo,sans-serif;text-transform:uppercase;letter-spacing:.04em;background:var(--ink);color:var(--card);border:0;padding:11px 18px;border-radius:3px;cursor:pointer}.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}.btn.small{padding:7px 12px;font-size:11px}.btn.danger{background:var(--red)}.schedule-grid{display:grid;gap:8px}.schedule-day{display:grid;grid-template-columns:110px 1fr 70px;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font:12.5px 'IBM Plex Mono',monospace}.schedule-day:last-child{border:0}.schedule-day span{color:var(--soft)}.schedule-day b{text-align:right;color:var(--green)}label{display:block;font-size:11px;text-transform:uppercase;color:var(--soft);margin-bottom:5px}input,select{width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);font:14px 'IBM Plex Mono',monospace}.form-row,.session-row,.actions{display:flex;gap:12px;flex-wrap:wrap}.form-row{margin-bottom:14px}.form-row>div,.field{flex:1 1 160px}.session-row{align-items:flex-end;padding:10px 0;border-bottom:1px dashed var(--line)}.remove{background:none;border:0;color:var(--red);cursor:pointer;text-decoration:underline;padding:9px 4px}.actions{justify-content:space-between;align-items:center;margin-top:14px}.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}.summary-card{background:var(--alt);border:1px solid var(--line);border-radius:5px;padding:14px 16px}.label{font:11px 'IBM Plex Mono',monospace;color:var(--soft);text-transform:uppercase}.num{font:600 24px 'IBM Plex Mono',monospace;margin:8px 0}.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:8px}.bar-fill{height:100%}.stamp{display:inline-block;font:800 11px Archivo,sans-serif;text-transform:uppercase;padding:4px 10px;border:2px solid;border-radius:3px;transform:rotate(-3deg)}.over{color:var(--red)}.good{color:var(--green)}.under{color:var(--amber)}.log-entry{display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}.date{font:700 15px Archivo,sans-serif}.sessions{font-size:12.5px;color:var(--soft);margin-top:4px}.meta,.buttons{display:flex;align-items:center;gap:8px}.total{font:600 14px 'IBM Plex Mono',monospace;text-align:right}.empty{text-align:center;color:var(--soft);font:13px 'IBM Plex Mono',monospace;padding:20px}.variance{font-size:11px}.stamp.offday{color:var(--soft)}.note{font-size:11px;color:var(--soft);margin:-4px 0 12px}footer{text-align:center;font-size:11px;color:var(--soft);margin-top:40px}@media(max-width:640px){.schedule-day{grid-template-columns:1fr;gap:3px}.schedule-day b,.total{text-align:left}.log-entry{flex-direction:column}}
+:root{--paper:#EAE0C8;--card:#F6F1E1;--alt:#F0E9D4;--ink:#1E2A38;--soft:#5B6663;--line:#C9BC98;--red:#B23A2E;--green:#3D6B52;--amber:#B8862E}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,sans-serif;background-image:repeating-linear-gradient(0deg,rgba(30,42,56,.035) 0,rgba(30,42,56,.035) 1px,transparent 1px,transparent 32px)}
+.shell{display:flex;align-items:flex-start;min-height:100vh}
+.sidebar{width:236px;flex-shrink:0;background:var(--card);border-right:1px solid var(--line);padding:26px 18px;display:flex;flex-direction:column;gap:26px;position:sticky;top:0;height:100vh}
+.sidebar .brand{font:800 21px Archivo,sans-serif;text-transform:uppercase;letter-spacing:-.02em;display:flex;align-items:center;gap:9px;line-height:1.15}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px rgba(178,58,46,.18);flex-shrink:0}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav-item{text-align:left;background:none;border:0;border-left:3px solid transparent;padding:12px 12px;font:700 11.5px Archivo,sans-serif;text-transform:uppercase;letter-spacing:.04em;color:var(--soft);cursor:pointer;border-radius:0 4px 4px 0;line-height:1.35}
+.nav-item:hover{background:var(--alt);color:var(--ink)}
+.nav-item.active{border-left-color:var(--red);color:var(--ink);background:var(--alt)}
+.sidebar .tagline{margin-top:auto;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--soft);text-transform:uppercase;letter-spacing:.06em}
+.content{flex:1;min-width:0;max-width:900px;margin:0 auto;padding:28px 24px 80px}
+.topbar{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid var(--ink);padding-bottom:14px;margin-bottom:22px;flex-wrap:wrap;gap:10px}
+.page-title{font:800 25px Archivo,sans-serif;text-transform:uppercase;letter-spacing:-.02em;margin:0}
+label,.eyebrow,.sessions,footer{font-family:'IBM Plex Mono',monospace}
+.eyebrow{font-size:11px;color:var(--soft)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:20px;margin-bottom:22px}
+.card h2{font:700 15px Archivo,sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:0 0 16px;display:flex;justify-content:space-between;gap:8px}
+.btn{font:700 12.5px Archivo,sans-serif;text-transform:uppercase;letter-spacing:.04em;background:var(--ink);color:var(--card);border:0;padding:11px 18px;border-radius:3px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn.small{padding:7px 12px;font-size:11px}
+.btn.danger{background:var(--red)}
+.schedule-grid{display:grid;gap:8px}
+.schedule-day{display:grid;grid-template-columns:110px 1fr 70px;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font:12.5px 'IBM Plex Mono',monospace}
+.schedule-day:last-child{border:0}
+.schedule-day span{color:var(--soft)}
+.schedule-day b{text-align:right;color:var(--green)}
+label{display:block;font-size:11px;text-transform:uppercase;color:var(--soft);margin-bottom:5px}
+input,select{width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);font:14px 'IBM Plex Mono',monospace}
+.form-row,.session-row,.actions{display:flex;gap:12px;flex-wrap:wrap}
+.form-row{margin-bottom:14px}
+.form-row>div,.field{flex:1 1 160px}
+.session-row{align-items:flex-end;padding:10px 0;border-bottom:1px dashed var(--line)}
+.remove{background:none;border:0;color:var(--red);cursor:pointer;text-decoration:underline;padding:9px 4px}
+.actions{justify-content:space-between;align-items:center;margin-top:14px}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.summary-card{background:var(--alt);border:1px solid var(--line);border-radius:5px;padding:14px 16px}
+.label{font:11px 'IBM Plex Mono',monospace;color:var(--soft);text-transform:uppercase}
+.num{font:600 24px 'IBM Plex Mono',monospace;margin:8px 0}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.bar-fill{height:100%}
+.stamp{display:inline-block;font:800 11px Archivo,sans-serif;text-transform:uppercase;padding:4px 10px;border:2px solid;border-radius:3px;transform:rotate(-3deg)}
+.over{color:var(--red)}
+.good{color:var(--green)}
+.under{color:var(--amber)}
+.stamp.offday{color:var(--soft)}
+.log-entry{display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+.date{font:700 15px Archivo,sans-serif}
+.sessions{font-size:12.5px;color:var(--soft);margin-top:4px}
+.meta,.buttons{display:flex;align-items:center;gap:8px}
+.total{font:600 14px 'IBM Plex Mono',monospace;text-align:right}
+.empty{text-align:center;color:var(--soft);font:13px 'IBM Plex Mono',monospace;padding:20px}
+.variance{font-size:11px}
+.note{font-size:11px;color:var(--soft);margin:-4px 0 12px}
+footer{text-align:center;font-size:11px;color:var(--soft);margin-top:40px}
+@media(max-width:800px){
+  .shell{flex-direction:column}
+  .sidebar{width:100%;height:auto;position:static;flex-direction:row;align-items:center;padding:14px 16px;gap:16px;overflow-x:auto}
+  .sidebar .brand{font-size:17px;white-space:nowrap}
+  .nav{flex-direction:row;gap:6px}
+  .nav-item{border-left:0;border-bottom:3px solid transparent;border-radius:4px 4px 0 0;white-space:nowrap}
+  .nav-item.active{border-left-color:transparent;border-bottom-color:var(--red)}
+  .sidebar .tagline{display:none}
+  .content{padding:20px 16px 60px;max-width:100%}
+  .schedule-day{grid-template-columns:1fr;gap:3px}
+  .schedule-day b,.total{text-align:left}
+  .log-entry{flex-direction:column}
+}
 </style>
-</head><body><div class="wrap">
-<header class="top"><div><div class="brand"><span class="dot"></span>Radha-Time-Entry</div><div class="tagline">a plain-text time log</div></div><div style="display:flex;gap:8px;align-items:center"><button class="btn small" id="installBtn" hidden>Install App</button><button class="btn ghost small" id="exportBtn">Export backup</button><label class="btn ghost small" style="margin:0;cursor:pointer">Import<input type="file" id="importFile" accept="application/json" hidden></label></div></header>
-<div id="iosInstallHint" class="card" hidden style="padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span class="eyebrow" style="font-size:12px">Add this to your Home Screen: tap the Share icon, then "Add to Home Screen".</span><button class="btn ghost small" id="iosHintDismiss">Got it</button></div>
-<div class="card"><h2>Fixed working schedule <span class="eyebrow">Hard-coded · 30h 30m / week</span></h2><div class="schedule-grid"><div class="schedule-day"><strong>Monday</strong><span>08:00–12:00 · 14:30–18:00</span><b>7h 30m</b></div><div class="schedule-day"><strong>Tuesday</strong><span>08:00–12:00 · 16:00–18:00</span><b>6h 00m</b></div><div class="schedule-day"><strong>Wednesday</strong><span>08:00–13:00</span><b>5h 00m</b></div><div class="schedule-day"><strong>Thursday</strong><span>08:00–12:00 · 16:00–18:00</span><b>6h 00m</b></div><div class="schedule-day"><strong>Friday</strong><span>08:00–14:00</span><b>6h 00m</b></div></div></div>
-<div class="card"><h2>Log a day <span class="eyebrow" id="editingLabel"></span></h2><div class="form-row"><div><label for="entryDate">Date</label><input type="date" id="entryDate"></div><div><label for="dayType">Day type</label><select id="dayType"><option value="work">Working day</option><option value="holiday">Public holiday</option><option value="ferien">Ferien (vacation)</option></select></div></div><div class="note" id="dayTypeNote" hidden>This day is excluded from your weekly and monthly booking-hours totals — no check-in/check-out needed.</div><div id="sessionsContainer"></div><div class="actions"><button class="btn ghost small" id="addSessionBtn">+ Add another session</button><div><button class="btn ghost" id="cancelEditBtn" hidden>Cancel edit</button> <button class="btn" id="saveEntryBtn">Save day</button></div></div></div>
-<div class="card"><h2>This week &amp; last <span class="eyebrow">Mon–Sun, vs. fixed hours</span></h2><div class="summary-grid" id="weeklySummary"></div></div>
-<div class="card"><h2>This month &amp; last <span class="eyebrow">vs. fixed hours</span></h2><div class="summary-grid" id="monthlySummary"></div></div>
-<div class="card"><h2>Full log <span class="eyebrow" id="logCount"></span></h2><div id="logList"></div></div>
-<footer>Stored only in this browser · use Export to back up or move devices</footer></div>
+</head><body>
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="brand"><span class="dot"></span>Radha-Time-Entry</div>
+    <nav class="nav">
+      <button class="nav-item active" data-tab="entry" data-title="Radha Time Entry">Radha Time Entry</button>
+      <button class="nav-item" data-tab="dashboard" data-title="Weekly &amp; Monthly Dashboard">Weekly &amp; Monthly Dashboard</button>
+    </nav>
+    <div class="tagline">a plain-text time log</div>
+  </aside>
+
+  <main class="content">
+    <div class="topbar">
+      <h1 class="page-title" id="pageTitle">Radha Time Entry</h1>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn small" id="installBtn" hidden>Install App</button>
+        <button class="btn ghost small" id="exportBtn">Export backup</button>
+        <label class="btn ghost small" style="margin:0;cursor:pointer">Import<input type="file" id="importFile" accept="application/json" hidden></label>
+      </div>
+    </div>
+
+    <div id="iosInstallHint" class="card" hidden style="padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span class="eyebrow" style="font-size:12px">Add this to your Home Screen: tap the Share icon, then "Add to Home Screen".</span><button class="btn ghost small" id="iosHintDismiss">Got it</button></div>
+
+    <section id="tab-entry" class="tab-panel">
+      <div class="card"><h2>Fixed working schedule <span class="eyebrow">Hard-coded · 30h 30m / week</span></h2><div class="schedule-grid"><div class="schedule-day"><strong>Monday</strong><span>08:00–12:00 · 14:30–18:00</span><b>7h 30m</b></div><div class="schedule-day"><strong>Tuesday</strong><span>08:00–12:00 · 16:00–18:00</span><b>6h 00m</b></div><div class="schedule-day"><strong>Wednesday</strong><span>08:00–13:00</span><b>5h 00m</b></div><div class="schedule-day"><strong>Thursday</strong><span>08:00–12:00 · 16:00–18:00</span><b>6h 00m</b></div><div class="schedule-day"><strong>Friday</strong><span>08:00–14:00</span><b>6h 00m</b></div></div></div>
+      <div class="card"><h2>Log a day <span class="eyebrow" id="editingLabel"></span></h2><div class="form-row"><div><label for="entryDate">Date</label><input type="date" id="entryDate"></div><div><label for="dayType">Day type</label><select id="dayType"><option value="work">Working day</option><option value="holiday">Public holiday</option><option value="ferien">Ferien (vacation)</option></select></div></div><div class="note" id="dayTypeNote" hidden>This day is excluded from your weekly and monthly booking-hours totals — no check-in/check-out needed.</div><div id="sessionsContainer"></div><div class="actions"><button class="btn ghost small" id="addSessionBtn">+ Add another session</button><div><button class="btn ghost" id="cancelEditBtn" hidden>Cancel edit</button> <button class="btn" id="saveEntryBtn">Save day</button></div></div></div>
+      <div class="card"><h2>Full log <span class="eyebrow" id="logCount"></span></h2><div id="logList"></div></div>
+    </section>
+
+    <section id="tab-dashboard" class="tab-panel" hidden>
+      <div class="card"><h2>This week &amp; last <span class="eyebrow">Mon–Sun, vs. fixed hours</span></h2><div class="summary-grid" id="weeklySummary"></div></div>
+      <div class="card"><h2>This month &amp; last <span class="eyebrow">vs. fixed hours</span></h2><div class="summary-grid" id="monthlySummary"></div></div>
+    </section>
+
+    <footer>Stored only in this browser · use Export to back up or move devices</footer>
+  </main>
+</div>
+
 <script>
 (function(){"use strict";
 var STORE="punch_entries_v1",SCHEDULE={1:{sessions:[{in:"08:00",out:"12:00"},{in:"14:30",out:"18:00"}],target:450},2:{sessions:[{in:"08:00",out:"12:00"},{in:"16:00",out:"18:00"}],target:360},3:{sessions:[{in:"08:00",out:"13:00"}],target:300},4:{sessions:[{in:"08:00",out:"12:00"},{in:"16:00",out:"18:00"}],target:360},5:{sessions:[{in:"08:00",out:"14:00"}],target:360}},state={entries:{},editing:null};
@@ -35,21 +133,24 @@ function load(){try{var raw=JSON.parse(localStorage.getItem(STORE)||"{}")||{};va
 function row(i,o){var c=document.getElementById("sessionsContainer"),r=document.createElement("div");r.className="session-row";r.innerHTML='<div class="field"><label>Check-in</label><input type="time" class="in" value="'+(i||"")+'"></div><div class="field"><label>Check-out</label><input type="time" class="out" value="'+(o||"")+'"></div><button type="button" class="remove">Remove</button>';r.querySelector(".remove").onclick=function(){if(c.children.length>1)r.remove()};c.appendChild(r)}function form(a){var c=document.getElementById("sessionsContainer");c.innerHTML="";(a.length?a:[{in:"",out:""}]).forEach(function(s){row(s.in,s.out)})}function collect(){return Array.from(document.querySelectorAll(".session-row")).map(function(r){return{in:r.querySelector(".in").value,out:r.querySelector(".out").value}}).filter(function(s){return s.in&&s.out})}
 function card(label,w,t){var st=status(w,t),pc=t?Math.min(100,w/t*100):0;return'<div class="summary-card"><div class="label">'+label+'</div><div class="num">'+fmt(w)+'</div><div class="bar"><div class="bar-fill" style="width:'+pc+'%;background:'+color(st.c)+'"></div></div><span class="stamp '+st.c+'">'+st.s+'</span><div class="eyebrow" style="margin-top:8px">of '+fmt(t)+' agreed</div></div>'}
 function summaries(){var wb={},mb={};Object.keys(state.entries).forEach(function(k){var d=new Date(k+"T00:00:00"),wk=monday(d),mk=k.slice(0,7),v=dayM(k);wb[wk]=(wb[wk]||0)+v;mb[mk]=(mb[mk]||0)+v});var w=document.getElementById("weeklySummary"),m=document.getElementById("monthlySummary"),wks=Object.keys(wb).sort().reverse().slice(0,4),mks=Object.keys(mb).sort().reverse().slice(0,3);w.innerHTML=wks.length?wks.map(function(k){var a=new Date(k+"T00:00:00"),b=new Date(a);b.setDate(b.getDate()+6);return card(a.toLocaleDateString(undefined,{month:"short",day:"numeric"})+" – "+b.toLocaleDateString(undefined,{month:"short",day:"numeric"}),wb[k],weekTarget(k))}).join(""):'<div class="empty">No entries logged yet.</div>';m.innerHTML=mks.length?mks.map(function(k){var p=k.split("-"),l=new Date(+p[0],+p[1]-1,1).toLocaleDateString(undefined,{month:"long",year:"numeric"});return card(l,mb[k],monthTarget(k))}).join(""):'<div class="empty">No entries logged yet.</div>'}
-function log(){var el=document.getElementById("logList"),ks=Object.keys(state.entries).sort().reverse();document.getElementById("logCount").textContent=ks.length?ks.length+" days logged":"";if(!ks.length){el.innerHTML='<div class="empty">Nothing logged yet.</div>';return}el.innerHTML="";ks.forEach(function(k){var typ=entryType(k),r=document.createElement("div");r.className="log-entry";if(typ==="holiday"||typ==="ferien"){r.innerHTML='<div><div class="date">'+dateLabel(k)+'</div><div class="sessions"><span class="stamp offday">'+dayTypeLabel(typ)+'</span> · excluded from targets</div></div><div class="meta"><div class="buttons"><button class="btn ghost small edit">Edit</button><button class="btn danger small del">Delete</button></div></div>'}else{var w=dayM(k),t=target(k),d=w-t,st=status(w,t);r.innerHTML='<div><div class="date">'+dateLabel(k)+'</div><div class="sessions">'+getSessions(k).map(function(s){return s.in+"–"+s.out}).join(" · ")+'</div></div><div class="meta"><div class="total">'+fmt(w)+'<br><span class="variance" style="color:'+color(st.c)+'">'+(d>0?"+":"")+fmt(d)+'</span></div><div class="buttons"><button class="btn ghost small edit">Edit</button><button class="btn danger small del">Delete</button></div></div>'}r.querySelector(".edit").onclick=function(){state.editing=k;document.getElementById("entryDate").value=k;var dt=typ||"work";document.getElementById("dayType").value=dt;applyDayType(dt);form(getSessions(k));document.getElementById("editingLabel").textContent="editing "+k;document.getElementById("cancelEditBtn").hidden=false;scrollTo({top:0,behavior:"smooth"})};r.querySelector(".del").onclick=function(){if(confirm("Delete the log for "+dateLabel(k)+"?")){delete state.entries[k];save();render()}};el.appendChild(r)})}function render(){summaries();log()}
+function log(){var el=document.getElementById("logList"),ks=Object.keys(state.entries).sort().reverse();document.getElementById("logCount").textContent=ks.length?ks.length+" days logged":"";if(!ks.length){el.innerHTML='<div class="empty">Nothing logged yet.</div>';return}el.innerHTML="";ks.forEach(function(k){var typ=entryType(k),r=document.createElement("div");r.className="log-entry";if(typ==="holiday"||typ==="ferien"){r.innerHTML='<div><div class="date">'+dateLabel(k)+'</div><div class="sessions"><span class="stamp offday">'+dayTypeLabel(typ)+'</span> · excluded from targets</div></div><div class="meta"><div class="buttons"><button class="btn ghost small edit">Edit</button><button class="btn danger small del">Delete</button></div></div>'}else{var w=dayM(k),t=target(k),d=w-t,st=status(w,t);r.innerHTML='<div><div class="date">'+dateLabel(k)+'</div><div class="sessions">'+getSessions(k).map(function(s){return s.in+"–"+s.out}).join(" · ")+'</div></div><div class="meta"><div class="total">'+fmt(w)+'<br><span class="variance" style="color:'+color(st.c)+'">'+(d>0?"+":"")+fmt(d)+'</span></div><div class="buttons"><button class="btn ghost small edit">Edit</button><button class="btn danger small del">Delete</button></div></div>'}r.querySelector(".edit").onclick=function(){state.editing=k;selectTab("entry");document.getElementById("entryDate").value=k;var dt=typ||"work";document.getElementById("dayType").value=dt;applyDayType(dt);form(getSessions(k));document.getElementById("editingLabel").textContent="editing "+k;document.getElementById("cancelEditBtn").hidden=false;scrollTo({top:0,behavior:"smooth"})};r.querySelector(".del").onclick=function(){if(confirm("Delete the log for "+dateLabel(k)+"?")){delete state.entries[k];save();render()}};el.appendChild(r)})}function render(){summaries();log()}
 function applyDayType(t){var sc=document.getElementById("sessionsContainer"),ab=document.getElementById("addSessionBtn"),note=document.getElementById("dayTypeNote"),off=t!=="work";sc.hidden=off;ab.hidden=off;note.hidden=!off}
 function reset(){state.editing=null;var k=today();document.getElementById("entryDate").value=k;document.getElementById("dayType").value="work";applyDayType("work");form(fixed(k));document.getElementById("editingLabel").textContent="";document.getElementById("cancelEditBtn").hidden=true}
-function init(){load();reset();render();document.getElementById("entryDate").onchange=function(){var k=this.value;if(!k)return;var typ=entryType(k)||"work";document.getElementById("dayType").value=typ;applyDayType(typ);form(typ==="work"?(getSessions(k).length?getSessions(k):fixed(k)):[])};document.getElementById("dayType").onchange=function(){var t=this.value;applyDayType(t);if(t==="work"){var k=document.getElementById("entryDate").value;form(getSessions(k).length?getSessions(k):fixed(k))}};document.getElementById("addSessionBtn").onclick=function(){row("","")};document.getElementById("cancelEditBtn").onclick=reset;document.getElementById("saveEntryBtn").onclick=function(){var k=document.getElementById("entryDate").value,t=document.getElementById("dayType").value;if(!k)return alert("Pick a date first.");var sessions=[];if(t==="work"){sessions=collect();if(!sessions.length)return alert("Add at least one complete check-in / check-out pair, or choose a non-working day type above.")}state.entries[k]={type:t,sessions:sessions};save();reset();render()};document.getElementById("exportBtn").onclick=function(){var b=new Blob([JSON.stringify({entries:state.entries,fixedSchedule:SCHEDULE,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="punch-backup-"+today()+".json";a.click();URL.revokeObjectURL(u)};document.getElementById("importFile").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(x){try{var d=JSON.parse(x.target.result);if(d.entries){var out={};Object.keys(d.entries).forEach(function(k){out[k]=Array.isArray(d.entries[k])?{type:"work",sessions:d.entries[k]}:d.entries[k]});state.entries=out}save();render();alert("Backup imported.")}catch(z){alert("Could not read that backup file.")}e.target.value=""};r.readAsText(f)}}document.addEventListener("DOMContentLoaded",init);
+function selectTab(tab){document.querySelectorAll(".nav-item").forEach(function(b){var on=b.dataset.tab===tab;b.classList.toggle("active",on);if(on)document.getElementById("pageTitle").textContent=b.dataset.title});document.getElementById("tab-entry").hidden=tab!=="entry";document.getElementById("tab-dashboard").hidden=tab!=="dashboard";try{localStorage.setItem("radha_active_tab",tab)}catch(e){}}
+function init(){load();reset();render();document.querySelectorAll(".nav-item").forEach(function(b){b.addEventListener("click",function(){selectTab(b.dataset.tab)})});var savedTab="entry";try{savedTab=localStorage.getItem("radha_active_tab")||"entry"}catch(e){}selectTab(savedTab);document.getElementById("entryDate").onchange=function(){var k=this.value;if(!k)return;var typ=entryType(k)||"work";document.getElementById("dayType").value=typ;applyDayType(typ);form(typ==="work"?(getSessions(k).length?getSessions(k):fixed(k)):[])};document.getElementById("dayType").onchange=function(){var t=this.value;applyDayType(t);if(t==="work"){var k=document.getElementById("entryDate").value;form(getSessions(k).length?getSessions(k):fixed(k))}};document.getElementById("addSessionBtn").onclick=function(){row("","")};document.getElementById("cancelEditBtn").onclick=reset;document.getElementById("saveEntryBtn").onclick=function(){var k=document.getElementById("entryDate").value,t=document.getElementById("dayType").value;if(!k)return alert("Pick a date first.");var sessions=[];if(t==="work"){sessions=collect();if(!sessions.length)return alert("Add at least one complete check-in / check-out pair, or choose a non-working day type above.")}state.entries[k]={type:t,sessions:sessions};save();reset();render()};document.getElementById("exportBtn").onclick=function(){var b=new Blob([JSON.stringify({entries:state.entries,fixedSchedule:SCHEDULE,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="punch-backup-"+today()+".json";a.click();URL.revokeObjectURL(u)};document.getElementById("importFile").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(x){try{var d=JSON.parse(x.target.result);if(d.entries){var out={};Object.keys(d.entries).forEach(function(k){out[k]=Array.isArray(d.entries[k])?{type:"work",sessions:d.entries[k]}:d.entries[k]});state.entries=out}save();render();alert("Backup imported.")}catch(z){alert("Could not read that backup file.")}e.target.value=""};r.readAsText(f)}}
+document.addEventListener("DOMContentLoaded",init);
 // ---- install prompt (Android/Chrome/Edge) ----
+document.addEventListener("DOMContentLoaded",function(){
 var deferredPrompt=null,installBtn=document.getElementById("installBtn");
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e;installBtn.hidden=false});
 installBtn.addEventListener("click",function(){if(!deferredPrompt)return;installBtn.hidden=true;deferredPrompt.prompt();deferredPrompt.userChoice.finally(function(){deferredPrompt=null})});
 window.addEventListener("appinstalled",function(){installBtn.hidden=true;deferredPrompt=null;localStorage.setItem("radha_installed","1")});
-// ---- iOS Safari fallback (no native prompt available on iOS) ----
 function isIos(){return /iphone|ipad|ipod/i.test(navigator.userAgent)}
 function isStandalone(){return window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}
 if(isIos()&&!isStandalone()&&!localStorage.getItem("radha_ios_hint_dismissed")){document.getElementById("iosInstallHint").hidden=false}
 var iosDismiss=document.getElementById("iosHintDismiss");
 if(iosDismiss)iosDismiss.addEventListener("click",function(){document.getElementById("iosInstallHint").hidden=true;localStorage.setItem("radha_ios_hint_dismissed","1")});
+});
 })();
 </script><script>
 if ("serviceWorker" in navigator) {

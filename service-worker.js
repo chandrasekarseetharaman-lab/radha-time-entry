@@ -1,4 +1,4 @@
-var CACHE = "radha-time-entry-v2";
+var CACHE = "radha-time-entry-v3";
 var ASSETS = ["./", "./index.html", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", function (event) {
